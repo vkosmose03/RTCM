@@ -10,36 +10,75 @@
 
 
 /*      Создание масоек для вычисления четности        */
-#define B25 ((uint32_t) 0xEC7CD200)
-#define B26 ((uint32_t) 0x763E6900)
-#define B27 ((uint32_t) 0xBB1F3400)
-#define B28 ((uint32_t) 0x5D8F9A00)
-#define B29 ((uint32_t) 0xAEC7CD00)
-#define B30 ((uint32_t) 0x2DEA2700)
+#define B25 ((uint32_t) 0x3B1F3480)
+#define B26 ((uint32_t) 0x1D8F9A40)
+#define B27 ((uint32_t) 0x2EC7CD00)
+#define B28 ((uint32_t) 0x1763E680)
+#define B29 ((uint32_t) 0x2BB1F340)
+#define B30 ((uint32_t) 0x0B7A89C0)
 
 
 
 /*      Создание масок для нахождения приеамболы        */
-#define B30 ((uint8_t) 0x99)
-#define B30 ((uint8_t) 0x66)
+#define Pre ((uint8_t) 0x99)
+#define InvPre ((uint8_t) 0x66)
 
 
 
 uint8_t Xor(uint32_t);
 uint8_t ParityCreate(uint32_t, uint8_t, uint8_t);
-bool PreambleChek(uint32_t);
+uint8_t PreambleChek(uint32_t);
+uint8_t RollAndCut(uint8_t);
 bool ParityChek(uint32_t, uint8_t);
 
 int main()
 {
+    uint8_t buffer;
+    uint32_t word;
+    uint8_t preambleresult
+    uint32_t message[32];
+
+    FILE *file = fopen("1.cor", "rb");
+    if (*file == NULL)
+        printf("Error");
+    
+    while(1)
+    {
+        buffer = (uint8_t)fgetc(file);
+        buffer = RollAndCut(buffer);
+        word += buffer;
+        word <<= 6;
+        preambleresult = PreambleChek(word);
+        if (0 < preambleresult & preambleresult < 8)
+        {
+            word << preambleresult;
+            buffer = (uint8_t)fgetc(file);
+            buffer = RollAndCut(buffer);
+            word += buffer >> preambleresult;
+        }
+        else if (preambleresult == 8)
+            word = ~word;
+        else if (8 < preambleresult & preambleresult < 16)
+        {
+            preambleresult -= 8;
+            word << preambleresult;
+            buffer = (uint8_t)fgetc(file);
+            buffer = RollAndCut(buffer);
+            word += buffer >> preambleresult;
+            word = ~word;
+        }
+
+
+    }
+
     return 0;
 }
 
 uint8_t Xor(uint32_t word)
 {
     uint8_t bit = 0;
-    word >>= 2;
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 30; i++)
+    {
         bit ^= word & 0x00000001;
         word >>= 1;
     }
@@ -60,13 +99,29 @@ uint8_t ParityCreate(uint32_t word, uint8_t bit29, uint8_t bit30)
 
 bool ParityChek(uint32_t word, uint8_t parity)
 {
-    word >>= 2;
     if (word & 0x3f == parity)
         return true;
     return false;
 }
 
-bool PreambleChek(uint32_t word)
+uint8_t PreambleChek(uint32_t word)
 {
-    
-} 
+    for (int i = 0; i < 8; i++)
+    {
+        word <<= 1;
+        if (word & 0x3FC00000 == Pre)
+            return i;
+        else if (word & 0x3FC00000 == InvPre)
+            return (i + 8);
+    }
+    return 16;
+}
+
+uint8_t RollAndCut(uint8_t buffer)
+{
+    uint8_t bufferroll = 0;
+    for (int i = 0; i < 6; i++)
+        bufferroll = ((buffer >> 5 - i & 0x01) == 1) ? (1 << i) : (0 << i);
+    return bufferroll;
+}
+
