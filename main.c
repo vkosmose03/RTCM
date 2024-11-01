@@ -29,17 +29,18 @@ uint8_t Xor(uint32_t);
 uint8_t ParityCreate(uint32_t, uint8_t, uint8_t);
 uint8_t PreambleChek(uint32_t);
 uint8_t RollAndCut(uint8_t);
-bool ParityChek(uint32_t, uint8_t);
+bool ParityChek(uint32_t);
 
 int main()
 {
-    uint8_t buffer;
-    uint32_t word;
-    uint8_t preambleresult
+    uint8_t buffer, cachebuffer;
+    uint32_t word = 0x000000C0;
+    uint8_t preambleresult;
     uint32_t message[32];
+    bool parityresult;
 
     FILE *file = fopen("1.cor", "rb");
-    if (*file == NULL)
+    if (file == NULL)
         printf("Error");
     
     while(1)
@@ -48,6 +49,11 @@ int main()
         buffer = RollAndCut(buffer);
         word += buffer;
         word <<= 6;
+
+/*      Проверяем приамбудлу, при ее наличии сдвигаем word так,     */
+/*      чтобы преамбула становилась в начало слова                  */
+/*      (начиная со 2ого бита), если сдвиг произошел не на целое    */
+/*      число байт, то остаток байта заносим в cachebuffer          */
         preambleresult = PreambleChek(word);
         if (0 < preambleresult & preambleresult < 8)
         {
@@ -67,6 +73,19 @@ int main()
             word += buffer >> preambleresult;
             word = ~word;
         }
+        else if (preambleresult == 16)
+            continue;
+        cachebuffer = buffer & (0xff >> (7 - preambleresult));
+
+        if (ParityChek(word))
+            message[0] = word;
+        else
+        {
+            word <<= preambleresult;
+            word += cachebuffer;
+        }
+                
+
 
 
     }
@@ -97,8 +116,9 @@ uint8_t ParityCreate(uint32_t word, uint8_t bit29, uint8_t bit30)
     return parity;
 }
 
-bool ParityChek(uint32_t word, uint8_t parity)
+bool ParityChek(uint32_t word)
 {
+    uint8_t parity = ParityCreate(word, word >> 31 & 0x01, word >> 30 & 0x01);
     if (word & 0x3f == parity)
         return true;
     return false;
