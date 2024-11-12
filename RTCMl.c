@@ -181,9 +181,14 @@ Preamble PreambleSearch(uint64_t potok, uint8_t bit30, uint8_t bit29) {
 void COMWriter() {
     printf("Start third thread\n");
     uint8_t buffer, buffer_roll, bit29, bit30, parity;
-    DWORD bytesWritten;
+    DWORD bytesWritten, bytesRead;
     uint32_t *mes = NULL;
-    uint8_t kadry;
+    uint8_t kadry, mes_no, mes_id;
+    uint16_t zaderzka = 165;
+    uint8_t NNpast, NNsimple;
+    char line[12];
+    char *message = NULL;
+    uint16_t index = 0;
 
     HANDLE hSerial3 = CreateFile(COM3, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if(hSerial3 == INVALID_HANDLE_VALUE) {
@@ -209,13 +214,20 @@ void COMWriter() {
         printf("COM port configured successfully\n");
     }
 
+//    COMMTIMEOUTS timeouts = {0};
+//    timeouts.ReadTotalTimeoutConstant = 100;
+
+//    if (!SetCommTimeouts(hSerial3, &timeouts)) {
+//        printf("Ошибка установки тайм-аутов\n");
+//        CloseHandle(hSerial3);
+//    }
+
     while (1) {
-        Sleep(50);
+//        Sleep(50);
         for(int l = 0; l < 64; l++) {
             for(int s = 0; s < 32; s++) {
                 pthread_mutex_lock(&lock1);
                 if(messagefiled[l][s] != NULL) {
-                    printf("\nStart writing frame %u - %u mess \n", (messagefiled[l][s][0] >> 18 & 0x3f), (messagefiled[l][s][1] >> 11 & 0x1f));
                     bit29 = *wordbit29;
                     bit30 = *wordbit30;
                     kadry = messagefiled[l][s][1] >> 11 & 0x1f;
@@ -224,6 +236,9 @@ void COMWriter() {
                     free(messagefiled[l][s]);
                     messagefiled[l][s] = NULL;
                     pthread_mutex_unlock(&lock1);
+                    message = (char *)malloc((kadry + 2) * 5 * sizeof(char));
+                    mes_id = mes[0] >> 18 & 0x3f;
+                    mes_no = mes[1] >> 11 & 0x1f;
                     mes[1] = SequencesChanger(mes[1]);
                     for(int i = 0; i < (kadry + 2); i++) {
 
@@ -252,15 +267,40 @@ void COMWriter() {
                             buffer_roll |= 0x40;
     //                        uint8_t ghh = 0x22;
                             // printf("Data to send: %02X\n", buffer_roll);
-                            WriteFile(hSerial3, &buffer_roll, 1, &bytesWritten, NULL);
-
-                            
+                            message[index] = buffer_roll;
+                            index++;
                         }
-                    } 
+                    }
+//                    PurgeComm(hSerial3, PURGE_RXCLEAR);
+                    WriteFile(hSerial3, message, (kadry + 2) * 5 * sizeof(char), &bytesWritten, NULL);
+                    for (int gd = 0; gd < 10; gd ++) {
+                        ReadFile(hSerial3, line, 12, &bytesRead, NULL);
+                        if (sscanf(line, "$MRSSR,1,%d*hh", &NNsimple) == 1)
+                            if (NNsimple > NNpast)
+                                NNpast = NNsimple;
+                    }
+                    if (NNpast > 10) {
+                        zaderzka -= 10;
+                    } else if (NNpast > 5) {
+                        zaderzka -= 4;
+                    } else if (NNpast > 2) {
+                        zaderzka -= 2;
+                    }else if (NNpast > 0) {
+                        zaderzka -= 1;
+                    }
+                    Sleep(zaderzka * (kadry + 2));
+                    printf("\b\b\b");
+                    printf("\rStart writing frame %u - %u mess; Null message now: %d, waittime now: %u      ",  mes_id, mes_no, NNpast, zaderzka);
+                    Sleep(zaderzka * (kadry + 2));
                     *wordbit29 = bit29;
                     *wordbit30 = bit30;
                     free(mes);
                     mes = NULL;
+                    free(message);
+                    message = NULL;
+                    index = 0;
+                    NNpast = 0;
+                    NNsimple = 0;
                 }
                 pthread_mutex_unlock(&lock1);
             }
@@ -437,7 +477,7 @@ void firstCOM(void *args) {
             sattNo = 1;
         }
         pthread_mutex_lock(&lock1);
-        printf("First thread start writing\n");
+//        printf("First thread start writing\n");
         messagefiled[(frame_id - 1)][sattNo - 1] = (uint32_t *)malloc((chislo_kadrov + 2) * sizeof(uint32_t));
         // for(int i = 0; i < (chislo_kadrov + 2); i++)
         //     messagefiled[(frame_id - 1)][i] = message[i];
@@ -618,7 +658,7 @@ void secondCOM(void *args) {
             sattNo = 1;
         }
         pthread_mutex_lock(&lock1);
-        printf("First thread start writing\n");
+//        printf("First thread start writing\n");
         messagefiled[(frame_id - 1)][sattNo - 1] = (uint32_t *)malloc((chislo_kadrov + 2) * sizeof(uint32_t));
         // for(int i = 0; i < (chislo_kadrov + 2); i++)
         //     messagefiled[(frame_id - 1)][i] = message[i];
@@ -657,7 +697,7 @@ int main(){
     
     initialize();
 
-    printf("Вы хотите открыть следующте порты: \n");
+    printf("Will be open: \n");
     char *COM1;
     char *COM2;
     uint32_t *speed1;
