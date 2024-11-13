@@ -30,6 +30,8 @@ uint8_t ParityCreate(uint32_t, uint8_t, uint8_t);
 bool PreambleChek(uint32_t);
 bool ParityChek(uint32_t, uint8_t);
 
+
+
 int main()
 {
     return 0;

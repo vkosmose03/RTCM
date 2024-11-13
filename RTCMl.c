@@ -9,7 +9,6 @@
 
 pthread_mutex_t lock1;
 uint8_t *wordbit29, *wordbit30;
-uint16_t *Z1, *Z2;
 uint32_t *seq;
 char *COM3;
 uint32_t *speed3;
@@ -31,18 +30,6 @@ void initialize() {
     wordbit30 = (uint8_t *)malloc(sizeof(uint8_t));
     if (!wordbit30) {
         perror("Failed to allocate memory for wordbit30");
-        exit(1);
-    }
-    
-    Z1 = (uint16_t *)malloc(sizeof(uint16_t));
-    if (!Z1) {
-        perror("Failed to allocate memory for Z1");
-        exit(1);
-    }
-    
-    Z2 = (uint16_t *)malloc(sizeof(uint16_t));
-    if (!Z2) {
-        perror("Failed to allocate memory for Z2");
         exit(1);
     }
     
@@ -184,9 +171,9 @@ void COMWriter() {
     DWORD bytesWritten, bytesRead;
     uint32_t *mes = NULL;
     uint8_t kadry, mes_no, mes_id;
-    uint16_t zaderzka = 165;
+    uint16_t zaderzka = 320;
     uint8_t NNpast, NNsimple;
-    char line[12];
+    char line[512] = {0};
     char *message = NULL;
     uint16_t index = 0;
 
@@ -214,14 +201,20 @@ void COMWriter() {
         printf("COM port configured successfully\n");
     }
 
-//    COMMTIMEOUTS timeouts = {0};
-//    timeouts.ReadTotalTimeoutConstant = 100;
+   COMMTIMEOUTS timeouts = {0};
+   timeouts.ReadTotalTimeoutConstant = 50;
 
-//    if (!SetCommTimeouts(hSerial3, &timeouts)) {
-//        printf("Ошибка установки тайм-аутов\n");
-//        CloseHandle(hSerial3);
-//    }
+   if (!SetCommTimeouts(hSerial3, &timeouts)) {
+       printf("Ошибка установки тайм-аутов\n");
+       CloseHandle(hSerial3);
+   }
 
+   DWORD readBufferSize = 512;
+   DWORD writeBufferSize = 0;
+   if (!SetupComm(hSerial3, readBufferSize, writeBufferSize)) {
+       printf("Ошибка установки буфера\n");
+       CloseHandle(hSerial3);
+    }
     while (1) {
 //        Sleep(50);
         for(int l = 0; l < 64; l++) {
@@ -273,12 +266,14 @@ void COMWriter() {
                     }
 //                    PurgeComm(hSerial3, PURGE_RXCLEAR);
                     WriteFile(hSerial3, message, (kadry + 2) * 5 * sizeof(char), &bytesWritten, NULL);
-                    for (int gd = 0; gd < 10; gd ++) {
-                        ReadFile(hSerial3, line, 12, &bytesRead, NULL);
-                        if (sscanf(line, "$MRSSR,1,%d*hh", &NNsimple) == 1)
-                            if (NNsimple > NNpast)
-                                NNpast = NNsimple;
-                    }
+                        ReadFile(hSerial3, line, sizeof(line) - 1, &bytesRead, NULL);
+                        line[bytesRead] = '\0';
+                        char *back = strtok(line, "$");
+                        while (back != NULL) {
+                            if (sscanf(back, "MRSSR,1,%d*hh", &NNsimple) == 1)
+                                NNpast += NNsimple;
+                            back = strtok(NULL, "$");
+                        }
                     if (NNpast > 10) {
                         zaderzka -= 10;
                     } else if (NNpast > 5) {
@@ -288,9 +283,7 @@ void COMWriter() {
                     }else if (NNpast > 0) {
                         zaderzka -= 1;
                     }
-                    Sleep(zaderzka * (kadry + 2));
-                    printf("\b\b\b");
-                    printf("\rStart writing frame %u - %u mess; Null message now: %d, waittime now: %u      ",  mes_id, mes_no, NNpast, zaderzka);
+                    printf("\rStart writing frame %u - %u mess; Null message now: %d, waittime now: %u      ",  (l + 1), mes_no, NNpast, zaderzka);
                     Sleep(zaderzka * (kadry + 2));
                     *wordbit29 = bit29;
                     *wordbit30 = bit30;
@@ -381,7 +374,7 @@ void firstCOM(void *args) {
 
         word = (potok >> (32 - preamble.preamble_place)) & 0xffffffff;
 
-        if(bit30 == 1) {
+        if(preamble.Preamble_priznak == 1) {
             word = (~word & 0xffffff00) | word & 0x000000ff;
         }
 
@@ -434,8 +427,12 @@ void firstCOM(void *args) {
             parity_result = true;
         }
 
+        if(!parity_result)
+            continue;
+        
+        parity_result = false;
+
         message[1] = word;
-        Z1count = (word >> 19) & 0x1fff;
 
         bit29 = (parity & 0x02) >> 1;
         bit30 = parity & 0x01;
@@ -465,6 +462,16 @@ void firstCOM(void *args) {
                 word = (~word & 0xffffff00) | word & 0x000000ff;
             }
             parity = ParityCreate(((word >> 2) & 0x3fffffff), bit30, bit29);
+
+            if(((word >> 2) & 0x0000003f) == parity) {
+                parity_result = true;
+            }
+
+            if(!parity_result)
+                continue;
+            
+            parity_result = false;
+
             bit29 = (parity & 0x02) >> 1;
             bit30 = parity & 0x01;
             message[i+2] = word;
@@ -535,7 +542,8 @@ void secondCOM(void *args) {
     uint8_t frame_id, sattNo;
 
     while(1) {
-        parity_result = false;
+                parity_result = false;
+        // printf("Первая контрольная точка первого потока\n");
         ReadFile(hSerial2, &buffer, sizeof(buffer), &bytesRead, NULL); // Чтение начало
         for(int i = 0; i < 8; i++) {
             uint8_t bit = (buffer >> i) & 0x01;
@@ -546,7 +554,6 @@ void secondCOM(void *args) {
         }
         potok <<= 6;
         potok += (buffer_roll >> 2) & 0x3f;
-//        printf("%c", buffer);
         if (bytesRead > 0)
         buffer_roll = 0;
         buffer = 0; // Чтение конец
@@ -559,7 +566,7 @@ void secondCOM(void *args) {
 
         word = (potok >> (32 - preamble.preamble_place)) & 0xffffffff;
 
-        if(bit30 == 1) {
+        if(preamble.Preamble_priznak == 1) {
             word = (~word & 0xffffff00) | word & 0x000000ff;
         }
 
@@ -583,7 +590,6 @@ void secondCOM(void *args) {
         cut1 = preamble.preamble_place / 6;
         cut2 = 6 - (preamble.preamble_place - cut1 * 6);
         
-        // printf("Вторая контрольная точка второго потока\n");
         for(int i = 0; i < (cut1 + 1); i++) {
         ReadFile(hSerial2, &buffer, sizeof(buffer), &bytesRead, NULL); // Чтение начало
         for(int i = 0; i < 8; i++) {
@@ -594,7 +600,8 @@ void secondCOM(void *args) {
             bit = 0;
         }
         potok <<= 6;
-        potok += (buffer_roll >> 2) & 0x3f;  
+        potok += (buffer_roll >> 2) & 0x3f;
+//        printf("%c", buffer);
         if (bytesRead > 0)
         buffer_roll = 0;
         buffer = 0; // Чтение конец
@@ -612,11 +619,12 @@ void secondCOM(void *args) {
             parity_result = true;
         }
 
-        message[1] = word;
-
-        Z2count = (word >> 19) & 0x1fff;
+        if(!parity_result)
+            continue;
         
-        // *Z2 = Z2count;
+        parity_result = false;
+
+        message[1] = word;
 
         bit29 = (parity & 0x02) >> 1;
         bit30 = parity & 0x01;
@@ -646,11 +654,21 @@ void secondCOM(void *args) {
                 word = (~word & 0xffffff00) | word & 0x000000ff;
             }
             parity = ParityCreate(((word >> 2) & 0x3fffffff), bit30, bit29);
+
+            if(((word >> 2) & 0x0000003f) == parity) {
+                parity_result = true;
+            }
+
+            if(!parity_result)
+                continue;
+            
+            parity_result = false;
+
             bit29 = (parity & 0x02) >> 1;
             bit30 = parity & 0x01;
             message[i+2] = word;
         }
-
+        
         frame_id = message[0] >> 18 & 0x3f;
         if(frame_id == 9 || frame_id == 34) {
             sattNo = message[2] >> 24 & 0x1f;
@@ -664,7 +682,6 @@ void secondCOM(void *args) {
         //     messagefiled[(frame_id - 1)][i] = message[i];
         memcpy(messagefiled[(frame_id - 1)][sattNo - 1], message, (chislo_kadrov + 2) * sizeof(uint32_t));
         pthread_mutex_unlock(&lock1);
-        
         
     }
     CloseHandle(hSerial2);
