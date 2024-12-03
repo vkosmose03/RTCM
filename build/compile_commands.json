@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/Projects/RTCM/build",
+  "command": "C:\\msys64\\mingw64\\bin\\gcc.exe -DLIBDEFLATE_DLL @CMakeFiles/TutorialApp.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles\\TutorialApp.dir\\main.c.obj -c D:\\Projects\\RTCM\\GTK\\main.c",
+  "file": "D:/Projects/RTCM/GTK/main.c",
+  "output": "CMakeFiles/TutorialApp.dir/main.c.obj"
+}
+]

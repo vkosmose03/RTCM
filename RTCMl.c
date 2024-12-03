@@ -10,7 +10,6 @@
 pthread_mutex_t lock1;
 uint8_t *wordbit29, *wordbit30;
 uint32_t *seq;
-char *COM3;
 uint32_t *speed3;
 uint32_t ***messagefiled;
 uint32_t *byteoffirst, *byteofsecond;
@@ -165,13 +164,17 @@ Preamble PreambleSearch(uint64_t potok, uint8_t bit30, uint8_t bit29) {
     return pre;
 }
 
-void COMWriter() {
+void COMWriter(void* args) {
     printf("Start third thread\n");
+    thread_args_t *thread_args = (thread_args_t *)args;
+    char* COM3 = thread_args->com_port;
+    uint32_t *zaderzka = thread_args->speed;
+    uint16_t zaderzka_count = 0;
+    bool zaderzka_priznak;
     uint8_t buffer, buffer_roll, bit29, bit30, parity;
     DWORD bytesWritten, bytesRead;
     uint32_t *mes = NULL;
     uint8_t kadry, mes_no, mes_id;
-    uint16_t zaderzka = 320;
     uint8_t NNpast, NNsimple;
     char line[512] = {0};
     char *message = NULL;
@@ -215,6 +218,14 @@ void COMWriter() {
        printf("Ошибка установки буфера\n");
        CloseHandle(hSerial3);
     }
+
+    if (*zaderzka == 0) {
+        zaderzka_priznak = false;
+        *zaderzka = 300;
+    } else {
+        zaderzka_priznak = true;
+    }
+
     while (1) {
 //        Sleep(50);
         for(int l = 0; l < 64; l++) {
@@ -274,17 +285,23 @@ void COMWriter() {
                                 NNpast += NNsimple;
                             back = strtok(NULL, "$");
                         }
-                    if (NNpast > 10) {
-                        zaderzka -= 10;
-                    } else if (NNpast > 5) {
-                        zaderzka -= 4;
-                    } else if (NNpast > 2) {
-                        zaderzka -= 2;
-                    }else if (NNpast > 0) {
-                        zaderzka -= 1;
+                    if (zaderzka_priznak) {
+                        if (NNpast > 10) {
+                            *zaderzka -= 5;
+                        } else if (NNpast > 5) {
+                            *zaderzka -= 3;
+                        } else if (NNpast > 2) {
+                            *zaderzka -= 2;
+                        } else if (NNpast > 0) {
+                            *zaderzka -= 1;
+                        } else if (NNpast == 0) {
+                            zaderzka_count++;
+                            if (zaderzka_count == 10)
+                                *zaderzka += 10;
+                        }
                     }
-                    printf("\rStart writing frame %u - %u mess; Null message now: %d, waittime now: %u      ",  (l + 1), mes_no, NNpast, zaderzka);
-                    Sleep(zaderzka * (kadry + 2));
+                    printf("\rStart writing frame %u - %u mess; Null message now: %d, waittime now: %u      ",  (l + 1), mes_no, NNpast, *zaderzka);
+                    Sleep(*zaderzka * (kadry + 2));
                     *wordbit29 = bit29;
                     *wordbit30 = bit30;
                     free(mes);
@@ -717,8 +734,10 @@ int main(){
     printf("Will be open: \n");
     char *COM1;
     char *COM2;
+    char *COM3;
     uint32_t *speed1;
     uint32_t *speed2;
+    uint32_t *freque;
     char line[64];
     FILE *file = fopen("config.txt", "r");
 
@@ -759,7 +778,11 @@ while (fgets(line, 63, file)) {
             speed3 = (uint32_t *)malloc(sizeof(uint32_t));
             *speed3 = (uint32_t)strtoul(value, NULL, 10);
             printf("speed3 = %u\n", *speed3);
-        }
+        } else if (strcmp(key, "FREQUENCY") == 0) {
+            freque = (uint32_t *)malloc(sizeof(uint32_t));
+            *freque = (uint32_t)strtoul(value, NULL, 10);
+            printf("Frequency = %u\n", *freque);
+        } 
     }
 }
 
@@ -774,6 +797,7 @@ while (fgets(line, 63, file)) {
 
     thread_args_t args1 = {COM1, speed1};
     thread_args_t args2 = {COM2, speed2};
+    thread_args_t args3 = {COM3, freque};
 
     if (pthread_create(&thread1, NULL, (void*)firstCOM, (void *)&args1) != 0) {
         printf("First thread down\n");
@@ -785,7 +809,7 @@ while (fgets(line, 63, file)) {
         return 1;
     }
 
-    if (pthread_create(&thread3, NULL, (void*)COMWriter, NULL) != 0) {
+    if (pthread_create(&thread3, NULL, (void*)COMWriter, (void *)&args3) != 0) {
         printf("Third thread down\n");
         return 1;
     }
