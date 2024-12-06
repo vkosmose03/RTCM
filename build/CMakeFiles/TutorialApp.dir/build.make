@@ -91,9 +91,11 @@ TutorialApp_OBJECTS = \
 "CMakeFiles/TutorialApp.dir/main.c.obj"
 
 # External object files for target TutorialApp
-TutorialApp_EXTERNAL_OBJECTS =
+TutorialApp_EXTERNAL_OBJECTS = \
+"D:/Projects/RTCM/GTK/res.o"
 
 TutorialApp.exe: CMakeFiles/TutorialApp.dir/main.c.obj
+TutorialApp.exe: D:/Projects/RTCM/GTK/res.o
 TutorialApp.exe: CMakeFiles/TutorialApp.dir/build.make
 TutorialApp.exe: CMakeFiles/TutorialApp.dir/linkLibs.rsp
 TutorialApp.exe: CMakeFiles/TutorialApp.dir/objects1.rsp

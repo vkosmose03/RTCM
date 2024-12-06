@@ -1,2 +1,6 @@
 *.exe
 .vscode
+*.ico
+*.rc
+*.o
+*.txt

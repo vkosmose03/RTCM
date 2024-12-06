@@ -692,4 +692,207 @@ CMakeFiles/TutorialApp.dir/main.c.obj: D:\Projects\RTCM\GTK\main.c \
  D:/MSYS2/ucrt64/include/gtk-3.0/gtk/deprecated/gtkvscale.h \
  D:/MSYS2/ucrt64/include/gtk-3.0/gtk/deprecated/gtkvscrollbar.h \
  D:/MSYS2/ucrt64/include/gtk-3.0/gtk/deprecated/gtkvseparator.h \
- D:/MSYS2/ucrt64/include/gtk-3.0/gtk/gtk-autocleanups.h
+ D:/MSYS2/ucrt64/include/gtk-3.0/gtk/gtk-autocleanups.h \
+ D:\Projects\RTCM\GTK\func.c \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdbool.h \
+ D:/MSYS2/ucrt64/include/unistd.h D:/MSYS2/ucrt64/include/io.h \
+ D:/MSYS2/ucrt64/include/process.h \
+ D:/MSYS2/ucrt64/include/corecrt_startup.h \
+ D:/MSYS2/ucrt64/include/sys/types.h D:/MSYS2/ucrt64/include/getopt.h \
+ D:/MSYS2/ucrt64/include/pthread_unistd.h \
+ D:/MSYS2/ucrt64/include/Windows.h D:/MSYS2/ucrt64/include/sdkddkver.h \
+ D:/MSYS2/ucrt64/include/excpt.h D:/MSYS2/ucrt64/include/windef.h \
+ D:/MSYS2/ucrt64/include/winapifamily.h \
+ D:/MSYS2/ucrt64/include/minwindef.h \
+ D:/MSYS2/ucrt64/include/specstrings.h D:/MSYS2/ucrt64/include/sal.h \
+ D:/MSYS2/ucrt64/include/concurrencysal.h \
+ D:/MSYS2/ucrt64/include/driverspecs.h D:/MSYS2/ucrt64/include/winnt.h \
+ D:/MSYS2/ucrt64/include/_mingw_unicode.h D:/MSYS2/ucrt64/include/ctype.h \
+ D:/MSYS2/ucrt64/include/apiset.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/intrin-impl.h \
+ D:/MSYS2/ucrt64/include/basetsd.h D:/MSYS2/ucrt64/include/guiddef.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/x86intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/x86gprintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/ia32intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/adxintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/bmiintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/bmi2intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/cetintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/cldemoteintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/clflushoptintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/clwbintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/clzerointrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/cmpccxaddintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/enqcmdintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/fxsrintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/lzcntintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/lwpintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/movdirintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mwaitintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mwaitxintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/pconfigintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/popcntintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/pkuintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/prfchiintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/raointintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/rdseedintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/rtmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/serializeintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/sgxintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/tbmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/tsxldtrkintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/uintrintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/waitpkgintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/wbnoinvdintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xsaveintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xsavecintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xsaveoptintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xsavesintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xtestintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/hresetintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/usermsrintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/immintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xmmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/emmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/pmmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/tmmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/smmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/wmmintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avxintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avxvnniintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avxifmaintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avxvnniint8intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avxvnniint16intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx2intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512fintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512erintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512pfintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512cdintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512bwintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512dqintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vlbwintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vldqintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512ifmaintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512ifmavlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vbmiintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vbmivlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx5124fmapsintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx5124vnniwintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vpopcntdqintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vbmi2intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vbmi2vlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vnniintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vnnivlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vpopcntdqvlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512bitalgintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512bitalgvlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vp2intersectintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512vp2intersectvlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512fp16intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512fp16vlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/shaintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/sm3intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/sha512intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/sm4intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/fmaintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/f16cintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/gfniintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/vaesintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/vpclmulqdqintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512bf16vlintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avx512bf16intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/avxneconvertintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/amxtileintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/amxint8intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/amxbf16intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/amxcomplexintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/prfchwintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/keylockerintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/amxfp16intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mm3dnow.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/fma4intrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/ammintrin.h \
+ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/xopintrin.h \
+ D:/MSYS2/ucrt64/include/pshpack4.h D:/MSYS2/ucrt64/include/poppack.h \
+ D:/MSYS2/ucrt64/include/pshpack4.h D:/MSYS2/ucrt64/include/pshpack2.h \
+ D:/MSYS2/ucrt64/include/poppack.h D:/MSYS2/ucrt64/include/pshpack2.h \
+ D:/MSYS2/ucrt64/include/pshpack8.h D:/MSYS2/ucrt64/include/pshpack8.h \
+ D:/MSYS2/ucrt64/include/ktmtypes.h D:/MSYS2/ucrt64/include/winbase.h \
+ D:/MSYS2/ucrt64/include/apisetcconv.h \
+ D:/MSYS2/ucrt64/include/minwinbase.h D:/MSYS2/ucrt64/include/bemapiset.h \
+ D:/MSYS2/ucrt64/include/debugapi.h \
+ D:/MSYS2/ucrt64/include/errhandlingapi.h \
+ D:/MSYS2/ucrt64/include/fibersapi.h D:/MSYS2/ucrt64/include/fileapi.h \
+ D:/MSYS2/ucrt64/include/handleapi.h D:/MSYS2/ucrt64/include/heapapi.h \
+ D:/MSYS2/ucrt64/include/ioapiset.h \
+ D:/MSYS2/ucrt64/include/interlockedapi.h \
+ D:/MSYS2/ucrt64/include/jobapi.h D:/MSYS2/ucrt64/include/libloaderapi.h \
+ D:/MSYS2/ucrt64/include/memoryapi.h \
+ D:/MSYS2/ucrt64/include/namedpipeapi.h \
+ D:/MSYS2/ucrt64/include/namespaceapi.h \
+ D:/MSYS2/ucrt64/include/processenv.h \
+ D:/MSYS2/ucrt64/include/processthreadsapi.h \
+ D:/MSYS2/ucrt64/include/processtopologyapi.h \
+ D:/MSYS2/ucrt64/include/profileapi.h \
+ D:/MSYS2/ucrt64/include/realtimeapiset.h \
+ D:/MSYS2/ucrt64/include/securityappcontainer.h \
+ D:/MSYS2/ucrt64/include/securitybaseapi.h \
+ D:/MSYS2/ucrt64/include/synchapi.h D:/MSYS2/ucrt64/include/sysinfoapi.h \
+ D:/MSYS2/ucrt64/include/systemtopologyapi.h \
+ D:/MSYS2/ucrt64/include/threadpoolapiset.h \
+ D:/MSYS2/ucrt64/include/threadpoollegacyapiset.h \
+ D:/MSYS2/ucrt64/include/utilapiset.h \
+ D:/MSYS2/ucrt64/include/wow64apiset.h D:/MSYS2/ucrt64/include/winerror.h \
+ D:/MSYS2/ucrt64/include/fltwinerror.h \
+ D:/MSYS2/ucrt64/include/timezoneapi.h D:/MSYS2/ucrt64/include/wingdi.h \
+ D:/MSYS2/ucrt64/include/pshpack1.h D:/MSYS2/ucrt64/include/winuser.h \
+ D:/MSYS2/ucrt64/include/tvout.h D:/MSYS2/ucrt64/include/winnls.h \
+ D:/MSYS2/ucrt64/include/datetimeapi.h \
+ D:/MSYS2/ucrt64/include/stringapiset.h D:/MSYS2/ucrt64/include/wincon.h \
+ D:/MSYS2/ucrt64/include/winver.h D:/MSYS2/ucrt64/include/winreg.h \
+ D:/MSYS2/ucrt64/include/reason.h D:/MSYS2/ucrt64/include/winnetwk.h \
+ D:/MSYS2/ucrt64/include/wnnc.h D:/MSYS2/ucrt64/include/virtdisk.h \
+ D:/MSYS2/ucrt64/include/cderr.h D:/MSYS2/ucrt64/include/dde.h \
+ D:/MSYS2/ucrt64/include/ddeml.h D:/MSYS2/ucrt64/include/dlgs.h \
+ D:/MSYS2/ucrt64/include/lzexpand.h D:/MSYS2/ucrt64/include/mmsystem.h \
+ D:/MSYS2/ucrt64/include/mmsyscom.h D:/MSYS2/ucrt64/include/mciapi.h \
+ D:/MSYS2/ucrt64/include/mmiscapi.h D:/MSYS2/ucrt64/include/mmiscapi2.h \
+ D:/MSYS2/ucrt64/include/playsoundapi.h D:/MSYS2/ucrt64/include/mmeapi.h \
+ D:/MSYS2/ucrt64/include/timeapi.h D:/MSYS2/ucrt64/include/joystickapi.h \
+ D:/MSYS2/ucrt64/include/nb30.h D:/MSYS2/ucrt64/include/rpc.h \
+ D:/MSYS2/ucrt64/include/windows.h D:/MSYS2/ucrt64/include/rpcdce.h \
+ D:/MSYS2/ucrt64/include/rpcdcep.h D:/MSYS2/ucrt64/include/rpcnsi.h \
+ D:/MSYS2/ucrt64/include/rpcnterr.h D:/MSYS2/ucrt64/include/rpcasync.h \
+ D:/MSYS2/ucrt64/include/shellapi.h D:/MSYS2/ucrt64/include/winperf.h \
+ D:/MSYS2/ucrt64/include/winsock.h D:/MSYS2/ucrt64/include/_bsd_types.h \
+ D:/MSYS2/ucrt64/include/inaddr.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_socket_types.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_fd_types.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_ip_types.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_ip_mreq1.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_wsadata.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_xmitfile.h \
+ D:/MSYS2/ucrt64/include/psdk_inc/_wsa_errnos.h \
+ D:/MSYS2/ucrt64/include/wincrypt.h D:/MSYS2/ucrt64/include/bcrypt.h \
+ D:/MSYS2/ucrt64/include/ncrypt.h D:/MSYS2/ucrt64/include/dpapi.h \
+ D:/MSYS2/ucrt64/include/winefs.h D:/MSYS2/ucrt64/include/winscard.h \
+ D:/MSYS2/ucrt64/include/wtypes.h D:/MSYS2/ucrt64/include/rpcndr.h \
+ D:/MSYS2/ucrt64/include/rpcnsip.h D:/MSYS2/ucrt64/include/rpcsal.h \
+ D:/MSYS2/ucrt64/include/ole2.h D:/MSYS2/ucrt64/include/objbase.h \
+ D:/MSYS2/ucrt64/include/combaseapi.h \
+ D:/MSYS2/ucrt64/include/wtypesbase.h \
+ D:/MSYS2/ucrt64/include/unknwnbase.h \
+ D:/MSYS2/ucrt64/include/objidlbase.h D:/MSYS2/ucrt64/include/cguid.h \
+ D:/MSYS2/ucrt64/include/objidl.h D:/MSYS2/ucrt64/include/unknwn.h \
+ D:/MSYS2/ucrt64/include/urlmon.h D:/MSYS2/ucrt64/include/oleidl.h \
+ D:/MSYS2/ucrt64/include/servprov.h D:/MSYS2/ucrt64/include/msxml.h \
+ D:/MSYS2/ucrt64/include/oaidl.h D:/MSYS2/ucrt64/include/propidl.h \
+ D:/MSYS2/ucrt64/include/oleauto.h D:/MSYS2/ucrt64/include/winioctl.h \
+ D:/MSYS2/ucrt64/include/winsmcrd.h D:/MSYS2/ucrt64/include/winspool.h \
+ D:/MSYS2/ucrt64/include/prsht.h D:/MSYS2/ucrt64/include/commdlg.h \
+ D:/MSYS2/ucrt64/include/stralign.h \
+ D:/MSYS2/ucrt64/include/sec_api/stralign_s.h \
+ D:/MSYS2/ucrt64/include/winsvc.h D:/MSYS2/ucrt64/include/mcx.h \
+ D:/MSYS2/ucrt64/include/imm.h

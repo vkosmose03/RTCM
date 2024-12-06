@@ -26,8 +26,8 @@ CMAKE_BUILD_TYPE:STRING=Debug
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
-//CXX compiler
-CMAKE_CXX_COMPILER:STRING=C:/msys64/mingw64/bin/g++.exe
+//No help, variable specified on the command line.
+CMAKE_CXX_COMPILER:FILEPATH=C:/msys64/mingw64/bin/g++.exe
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -55,8 +55,8 @@ CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 //Libraries linked by default with all C++ applications.
 CMAKE_CXX_STANDARD_LIBRARIES:STRING=-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
 
-//C compiler
-CMAKE_C_COMPILER:STRING=C:/msys64/mingw64/bin/gcc.exe
+//No help, variable specified on the command line.
+CMAKE_C_COMPILER:FILEPATH=C:/msys64/mingw64/bin/gcc.exe
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -255,6 +255,12 @@ PKG_CONFIG_ARGN:STRING=
 
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=C:/msys64/mingw64/bin/pkg-config.exe
+
+//Path to a library.
+pkgcfg_lib_GLIB_glib-2.0:FILEPATH=D:/MSYS2/ucrt64/lib/libglib-2.0.dll.a
+
+//Path to a library.
+pkgcfg_lib_GLIB_intl:FILEPATH=D:/MSYS2/ucrt64/lib/libintl.dll.a
 
 //Path to a library.
 pkgcfg_lib_GTK3_atk-1.0:FILEPATH=D:/MSYS2/ucrt64/lib/libatk-1.0.dll.a
@@ -505,6 +511,41 @@ CMAKE_TAPI-ADVANCED:INTERNAL=1
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding PkgConfig
 FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[C:/msys64/mingw64/bin/pkg-config.exe][v0.29.2()]
+GLIB_CFLAGS:INTERNAL=-ID:/MSYS2/ucrt64/include/glib-2.0;-ID:/MSYS2/ucrt64/lib/glib-2.0/include;-ID:/MSYS2/ucrt64/include
+GLIB_CFLAGS_I:INTERNAL=
+GLIB_CFLAGS_OTHER:INTERNAL=
+GLIB_FOUND:INTERNAL=1
+GLIB_INCLUDEDIR:INTERNAL=D:/MSYS2/ucrt64/include
+GLIB_INCLUDE_DIRS:INTERNAL=D:/MSYS2/ucrt64/include/glib-2.0;D:/MSYS2/ucrt64/lib/glib-2.0/include;D:/MSYS2/ucrt64/include
+GLIB_LDFLAGS:INTERNAL=-LD:/MSYS2/ucrt64/lib;-lglib-2.0;-lintl
+GLIB_LDFLAGS_OTHER:INTERNAL=
+GLIB_LIBDIR:INTERNAL=D:/MSYS2/ucrt64/lib
+GLIB_LIBRARIES:INTERNAL=glib-2.0;intl
+GLIB_LIBRARY_DIRS:INTERNAL=D:/MSYS2/ucrt64/lib
+GLIB_LIBS:INTERNAL=
+GLIB_LIBS_L:INTERNAL=
+GLIB_LIBS_OTHER:INTERNAL=
+GLIB_LIBS_PATHS:INTERNAL=
+GLIB_MODULE_NAME:INTERNAL=glib-2.0
+GLIB_PREFIX:INTERNAL=D:/MSYS2/ucrt64
+GLIB_STATIC_CFLAGS:INTERNAL=-ID:/MSYS2/ucrt64/include/glib-2.0;-ID:/MSYS2/ucrt64/lib/glib-2.0/include;-ID:/MSYS2/ucrt64/include
+GLIB_STATIC_CFLAGS_I:INTERNAL=
+GLIB_STATIC_CFLAGS_OTHER:INTERNAL=
+GLIB_STATIC_INCLUDE_DIRS:INTERNAL=D:/MSYS2/ucrt64/include/glib-2.0;D:/MSYS2/ucrt64/lib/glib-2.0/include;D:/MSYS2/ucrt64/include
+GLIB_STATIC_LDFLAGS:INTERNAL=-LD:/MSYS2/ucrt64/lib;-lglib-2.0;-lintl;-lws2_32;-lole32;-lwinmm;-lshlwapi;-luuid;-latomic;-lm;-lpcre2-8
+GLIB_STATIC_LDFLAGS_OTHER:INTERNAL=
+GLIB_STATIC_LIBDIR:INTERNAL=
+GLIB_STATIC_LIBRARIES:INTERNAL=glib-2.0;intl;ws2_32;ole32;winmm;shlwapi;uuid;atomic;m;pcre2-8
+GLIB_STATIC_LIBRARY_DIRS:INTERNAL=D:/MSYS2/ucrt64/lib
+GLIB_STATIC_LIBS:INTERNAL=
+GLIB_STATIC_LIBS_L:INTERNAL=
+GLIB_STATIC_LIBS_OTHER:INTERNAL=
+GLIB_STATIC_LIBS_PATHS:INTERNAL=
+GLIB_VERSION:INTERNAL=2.82.2
+GLIB_glib-2.0_INCLUDEDIR:INTERNAL=
+GLIB_glib-2.0_LIBDIR:INTERNAL=
+GLIB_glib-2.0_PREFIX:INTERNAL=
+GLIB_glib-2.0_VERSION:INTERNAL=
 GTK3_CFLAGS:INTERNAL=-DLIBDEFLATE_DLL;-ID:/MSYS2/ucrt64/include/gtk-3.0;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/pango-1.0;-ID:/MSYS2/ucrt64/include/harfbuzz;-ID:/MSYS2/ucrt64/include/pango-1.0;-ID:/MSYS2/ucrt64/include/fribidi;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/atk-1.0;-ID:/MSYS2/ucrt64/include/cairo;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/freetype2;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/harfbuzz;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/pixman-1;-ID:/MSYS2/ucrt64/include/gdk-pixbuf-2.0;-ID:/MSYS2/ucrt64/include/libpng16;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/webp;-ID:/MSYS2/ucrt64/include;-ID:/MSYS2/ucrt64/include/glib-2.0;-ID:/MSYS2/ucrt64/lib/glib-2.0/include;-ID:/MSYS2/ucrt64/include
 GTK3_CFLAGS_I:INTERNAL=
 GTK3_CFLAGS_OTHER:INTERNAL=-DLIBDEFLATE_DLL
@@ -550,8 +591,14 @@ _CMAKE_CXX_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 _CMAKE_C_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
+__pkg_config_arguments_GLIB:INTERNAL=REQUIRED;glib-2.0
 __pkg_config_arguments_GTK3:INTERNAL=REQUIRED;gtk+-3.0
+__pkg_config_checked_GLIB:INTERNAL=1
 __pkg_config_checked_GTK3:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GLIB_glib-2.0
+pkgcfg_lib_GLIB_glib-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GLIB_intl
+pkgcfg_lib_GLIB_intl-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GTK3_atk-1.0
 pkgcfg_lib_GTK3_atk-1.0-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GTK3_cairo
