@@ -1,4 +1,1 @@
-*.exe
-.vscode
-*.ico
-*.o
+build
