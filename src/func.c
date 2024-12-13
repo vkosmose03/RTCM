@@ -178,9 +178,7 @@ Preamble PreambleSearch(uint64_t potok, uint8_t bit30, uint8_t bit29) {
 
 void log_to_text_view(const char *message) {
     if (global_buffer) {
-        GtkTextIter end;
-        gtk_text_buffer_get_end_iter(global_buffer, &end);
-        gtk_text_buffer_insert(global_buffer, &end, message, -1);
+        gtk_text_buffer_set_text(global_buffer, message, -1);
     }
 }
 
@@ -329,9 +327,8 @@ gpointer COMWriter(gpointer user_data) {
                                 zaderzka += 2;
                         }
                     }
-                    snprintf(otladka,sizeof(otladka),"Start writing frame %u - %u mess; Null message now: %d, waittime now: %u\n\n",  (l + 1), mes_no, NNpast, zaderzka);
-                    log_to_text_view(otladka);
-                    memset(otladka, 0, sizeof(otladka));
+                    snprintf(otladka, sizeof(otladka), "Start writing frame %u - %u mess; Null message now: %d, waittime now: %u\n\n", (l + 1), mes_no, NNpast, zaderzka);
+                    g_idle_add((GSourceFunc) log_to_text_view, g_strdup(otladka));
                     Sleep(zaderzka * (kadry + 2));
                     *wordbit29 = bit29;
                     *wordbit30 = bit30;
