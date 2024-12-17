@@ -10,32 +10,29 @@
 //   GtkWidget *entry2;
 // } EntryData;
 
-void thread1 (GtkButton *button, gpointer user_data) 
+gpointer startobr (gpointer user_data)
 {
-  g_thread_new("FirstCom", firstCOM, user_data);
+   prog_start(NULL, user_data);
 }
 
-void thread2 (GtkButton *button, gpointer user_data) 
-{
-  g_thread_new("SecondCom", secondCOM, user_data);
-}
-
-void thread3 (GtkButton *button, gpointer user_data) 
-{
-  g_thread_new("ThirdCom", COMWriter, user_data);
+void start_thread (GtkButton *button, gpointer user_data) {
+    g_thread_new("prog_start_thread", startobr, user_data);
 }
 
 static void activate (GtkApplication* app, gpointer user_data)
 {
   GtkWidget *window;
   GtkWidget *button;
-  GtkWidget *entry1;
-  GtkWidget *entry2;
-  GtkWidget *entry3;
+  GtkWidget *name1;
+  GtkWidget *speed1;
+  GtkWidget *name2;
+  GtkWidget *speed2;
+  GtkWidget *name3;
+  GtkWidget *speed3;
+  GtkWidget *zaderzka;
   GtkWidget *box;
   GtkWidget *grid;
   EntryData *data;
-  EntryDataWrite *dataw;
 
     window = gtk_application_window_new (app);
     gtk_window_set_title (GTK_WINDOW (window), "Window");
@@ -44,72 +41,60 @@ static void activate (GtkApplication* app, gpointer user_data)
     grid = gtk_grid_new ();
     gtk_container_add (GTK_CONTAINER (window), grid);
 
-    entry1 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry1), "Имя первого COM");
+    name1 = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (name1), "Имя первого COM");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 0, 0, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry1, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), name1, TRUE, TRUE, 0);
 
-    entry2 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry2), "Скорость первого COM");
+    speed1 = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (speed1), "Скорость первого COM");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 0, 1, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry2, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), speed1, TRUE, TRUE, 0);
 
-    data = g_new(EntryData, 1);
-    data->entry1 = entry1;
-    data->entry2 = entry2;
-
-    button = gtk_button_new_with_label ("Запуск COM");
-    g_signal_connect (button, "clicked", G_CALLBACK (thread1), data);
-    gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 5, 1);
-
-    entry1 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry1), "Имя второго COM");
+    name2 = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (name2), "Имя второго COM");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 6, 0, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry1, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), name2, TRUE, TRUE, 0);
 
-    entry2 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry2), "Скорость второго COM");
+    speed2 = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (speed2), "Скорость второго COM");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 6, 1, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry2, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), speed2, TRUE, TRUE, 0);
 
-    data = g_new(EntryData, 1);
-    data->entry1 = entry1;
-    data->entry2 = entry2;
-
-    button = gtk_button_new_with_label ("Запуск COM");
-    g_signal_connect (button, "clicked", G_CALLBACK (thread2), data);
-    gtk_grid_attach (GTK_GRID (grid), button, 6, 2, 5, 1);
-
-    entry1 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry1), "Имя третьего COM");
+    name3 = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (name3), "Имя третьего COM");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 12, 0, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry1, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), name3, TRUE, TRUE, 0);
 
-    entry2 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry2), "Скорость третьего COM");
+    speed3 = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (speed3), "Скорость третьего COM");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 12, 1, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry2, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), speed3, TRUE, TRUE, 0);
 
-    entry3 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry3), "Задержка");
+    zaderzka = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (zaderzka), "Задержка");
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 12, 2, 5, 1);
-    gtk_box_pack_start (GTK_BOX (box), entry3, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (box), zaderzka, TRUE, TRUE, 0);
 
-    dataw = g_new(EntryDataWrite, 1);
-    dataw->entry1 = entry1;
-    dataw->entry2 = entry2;
-    dataw->entry3 = entry3;
+    data = g_new(EntryData, 1);
+    data->name1 = name1;
+    data->speed1 = speed1;
+    data->name2 = name2;
+    data->speed2 = speed2;
+    data->name3 = name3;
+    data->speed3 = speed3;
+    data->zaderzka = zaderzka;
 
-    button = gtk_button_new_with_label ("Запуск COM");
-    g_signal_connect (button, "clicked", G_CALLBACK (thread3), dataw);
-    gtk_grid_attach (GTK_GRID (grid), button, 12, 3, 5, 1);
+    button = gtk_button_new_with_label ("Запуск COM-портов");
+    g_signal_connect (button, "clicked", G_CALLBACK (start_thread), data);
+    gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 17, 1);
 
     button = gtk_button_new_with_label ("Завершить");
     g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
@@ -142,6 +127,8 @@ int main (int argc, char **argv)
   g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
   status = g_application_run (G_APPLICATION (app), argc, argv);
   g_object_unref (app);
+
+  gtk_main ();
 
   return status;
 }

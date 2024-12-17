@@ -6,8 +6,9 @@
 #include <string.h>
 #include <Windows.h>
 #include <gtk/gtk.h>
+#include <pthread.h>
 
-GMutex lock1;
+pthread_mutex_t lock;
 uint8_t *wordbit29, *wordbit30;
 uint32_t *seq;
 uint32_t ***messagefiled;
@@ -16,21 +17,19 @@ GtkTextBuffer *global_buffer = NULL;
 
 typedef struct 
 {
-  GtkWidget *entry1;
-  GtkWidget *entry2;
+  GtkWidget *name1;
+  GtkWidget *speed1;
+  GtkWidget *name2;
+  GtkWidget *speed2;
+  GtkWidget *name3;
+  GtkWidget *speed3;
+  GtkWidget *zaderzka;
+
 } EntryData;
 
 
-typedef struct 
-{
-  GtkWidget *entry1;
-  GtkWidget *entry2;
-  GtkWidget *entry3;
-} EntryDataWrite;
-
-
 void initialize() {
-      g_mutex_init(&lock1);
+    pthread_mutex_init ( &lock, NULL);
 
     wordbit29 = (uint8_t *)malloc(sizeof(uint8_t));
     if (!wordbit29) {
@@ -182,18 +181,16 @@ void log_to_text_view(const char *message) {
     }
 }
 
-gpointer COMWriter(gpointer user_data) {
-    EntryDataWrite *dataw = (EntryDataWrite *)user_data;
-    const gchar *com_name = gtk_entry_get_text(GTK_ENTRY(dataw->entry1));
-    const gchar *com_speed = gtk_entry_get_text(GTK_ENTRY(dataw->entry2));
-    const gchar *zader = gtk_entry_get_text(GTK_ENTRY(dataw->entry3));
+void *COMWriter(void *user_data) {
+    EntryData *data = (EntryData *)user_data;
+    const gchar *com_name = gtk_entry_get_text(GTK_ENTRY(data->name3));
+    const gchar *com_speed = gtk_entry_get_text(GTK_ENTRY(data->speed3));
+    const gchar *zader = gtk_entry_get_text(GTK_ENTRY(data->zaderzka));
     char *COM3 = g_strdup(com_name);
     char *endptr1;
     uint32_t speed3 = (uint32_t)strtoul(com_speed, &endptr1, 10);
     char *endptr2;
     uint16_t zaderzka = (uint16_t)strtoul(zader, &endptr2, 10);
-    
-    g_free(dataw);
 
     uint16_t zaderzka_count = 0;
     bool zaderzka_priznak;
@@ -257,7 +254,7 @@ gpointer COMWriter(gpointer user_data) {
 //        Sleep(50);
         for(int l = 0; l < 64; l++) {
             for(int s = 0; s < 32; s++) {
-                g_mutex_lock(&lock1);
+                pthread_mutex_lock(&lock);
                 if(messagefiled[l][s] != NULL) {
                     bit29 = *wordbit29;
                     bit30 = *wordbit30;
@@ -266,7 +263,7 @@ gpointer COMWriter(gpointer user_data) {
                     memcpy(mes, messagefiled[l][s], (kadry + 2) * sizeof(uint32_t));
                     free(messagefiled[l][s]);
                     messagefiled[l][s] = NULL;
-                    g_mutex_unlock(&lock1);
+                    pthread_mutex_unlock(&lock);
                     message = (char *)malloc((kadry + 2) * 5 * sizeof(char));
                     mes_id = mes[0] >> 18 & 0x3f;
                     mes_no = mes[1] >> 11 & 0x1f;
@@ -340,24 +337,21 @@ gpointer COMWriter(gpointer user_data) {
                     NNpast = 0;
                     NNsimple = 0;
                 }
-                g_mutex_unlock(&lock1);
+                pthread_mutex_unlock(&lock);
             }
         }
-        g_mutex_unlock(&lock1);
+        pthread_mutex_unlock(&lock);
     }
     CloseHandle(hSerial3);
 }
 
-gpointer firstCOM(gpointer user_data) {
+void *firstCOM(void *user_data) {
     EntryData *data = (EntryData *)user_data;
-    const gchar *com_name = gtk_entry_get_text(GTK_ENTRY(data->entry1));
-    const gchar *com_speed = gtk_entry_get_text(GTK_ENTRY(data->entry2));
+    const gchar *com_name = gtk_entry_get_text(GTK_ENTRY(data->name1));
+    const gchar *com_speed = gtk_entry_get_text(GTK_ENTRY(data->speed1));
     char *COM1 = g_strdup(com_name);
     char *endptr;
     uint32_t speed1 = (uint32_t)strtoul(com_speed, &endptr, 10);
-
-    g_free(data);
-
 
     printf("Start first thread\n");
     HANDLE hSerial1 = CreateFile(COM1, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
@@ -531,30 +525,31 @@ gpointer firstCOM(gpointer user_data) {
         frame_id = message[0] >> 18 & 0x3f;
         if(frame_id == 9 || frame_id == 34) {
             sattNo = message[2] >> 24 & 0x1f;
+        } else if (frame_id == 60) {
+            uint16_t st = ((message[2] >> 16)/10)*10;
+            sattNo = (message[2] >> 16) - st;
         } else {
             sattNo = 1;
         }
-        g_mutex_lock(&lock1);
+        pthread_mutex_lock(&lock);
 //        printf("First thread start writing\n");
         messagefiled[(frame_id - 1)][sattNo - 1] = (uint32_t *)malloc((chislo_kadrov + 2) * sizeof(uint32_t));
         // for(int i = 0; i < (chislo_kadrov + 2); i++)
         //     messagefiled[(frame_id - 1)][i] = message[i];
         memcpy(messagefiled[(frame_id - 1)][sattNo - 1], message, (chislo_kadrov + 2) * sizeof(uint32_t));
-        g_mutex_unlock(&lock1);
-        
+        pthread_mutex_unlock(&lock);
+       g_idle_add((GSourceFunc)gtk_main_quit, NULL); 
     }
     CloseHandle(hSerial1);
 }
 
-gpointer secondCOM(gpointer user_data) {
+void *secondCOM(void *user_data) {
     EntryData *data = (EntryData *)user_data;
-    const gchar *com_name = gtk_entry_get_text(GTK_ENTRY(data->entry1));
-    const gchar *com_speed = gtk_entry_get_text(GTK_ENTRY(data->entry2));
+    const gchar *com_name = gtk_entry_get_text(GTK_ENTRY(data->name2));
+    const gchar *com_speed = gtk_entry_get_text(GTK_ENTRY(data->speed2));
     char *COM2 = g_strdup(com_name);
     char *endptr;
     uint32_t speed2 = (uint32_t)strtoul(com_speed, &endptr, 10);
-
-    g_free(data);
 
     printf("Start second thread\n");
     HANDLE hSerial2 = CreateFile(COM2, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
@@ -598,7 +593,7 @@ gpointer secondCOM(gpointer user_data) {
     uint8_t frame_id, sattNo;
 
     while(1) {
-                parity_result = false;
+        parity_result = false;
         // printf("Первая контрольная точка первого потока\n");
         ReadFile(hSerial2, &buffer, sizeof(buffer), &bytesRead, NULL); // Чтение начало
         for(int i = 0; i < 8; i++) {
@@ -728,17 +723,50 @@ gpointer secondCOM(gpointer user_data) {
         frame_id = message[0] >> 18 & 0x3f;
         if(frame_id == 9 || frame_id == 34) {
             sattNo = message[2] >> 24 & 0x1f;
+        } else if (frame_id == 60) {
+            uint16_t st = ((message[2] >> 16)/10)*10;
+            sattNo = (message[2] >> 16) - st;
         } else {
             sattNo = 1;
         }
-        g_mutex_lock(&lock1);
+        pthread_mutex_lock(&lock);
 //        printf("First thread start writing\n");
         messagefiled[(frame_id - 1)][sattNo - 1] = (uint32_t *)malloc((chislo_kadrov + 2) * sizeof(uint32_t));
         // for(int i = 0; i < (chislo_kadrov + 2); i++)
         //     messagefiled[(frame_id - 1)][i] = message[i];
         memcpy(messagefiled[(frame_id - 1)][sattNo - 1], message, (chislo_kadrov + 2) * sizeof(uint32_t));
-        g_mutex_unlock(&lock1);
+        pthread_mutex_unlock(&lock);
         
     }
     CloseHandle(hSerial2);
+}
+
+int prog_start (GtkButton *button, gpointer data) 
+{
+    EntryData *datato = (EntryData *)data;
+    pthread_t th1, th2, th3;
+    if (pthread_create(&th1, NULL, firstCOM, datato) != 0) {
+        printf("Не удалось создать поток для первого порта\n");
+        return 1;
+    }
+    if (pthread_create(&th2, NULL, secondCOM, datato) != 0) {
+        printf("Не удалось создать поток для первого порта\n");
+        return 1;
+    }
+    if (pthread_create(&th3, NULL, COMWriter, datato) != 0) {
+        printf("Не удалось создать поток для первого порта\n");
+        return 1;
+    }
+    if (pthread_join(th1, NULL) != 0) {
+        printf("Ошибка запуска первого потока\n");
+        return 1;
+    }
+    if (pthread_join(th2, NULL) != 0) {
+        printf("Ошибка запуска первого потока\n");
+        return 1;
+    }
+    if (pthread_join(th3, NULL) != 0) {
+        printf("Ошибка запуска первого потока\n");
+        return 1;
+    }
 }
