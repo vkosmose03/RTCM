@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 #include <stdint.h>
+#include <signal.h>
+#include <Windows.h>
 #include "func.c"
 
 
@@ -19,6 +21,19 @@ void start_thread (GtkButton *button, gpointer user_data) {
     g_thread_new("prog_start_thread", startobr, user_data);
 }
 
+void thread_destroy (GtkButton *button) {
+  pthread_cancel(th1);
+  pthread_join(th1, NULL);
+  pthread_cancel(th2);
+  pthread_join(th2, NULL);
+  pthread_cancel(th3);
+  pthread_join(th3, NULL);
+}
+
+void quit_application(GtkButton *button, GtkApplication *app) {
+    g_application_quit(G_APPLICATION(app));
+}
+
 static void activate (GtkApplication* app, gpointer user_data)
 {
   GtkWidget *window;
@@ -33,6 +48,20 @@ static void activate (GtkApplication* app, gpointer user_data)
   GtkWidget *box;
   GtkWidget *grid;
   EntryData *data;
+  GList *comspeeds = NULL;
+  GList *bods = NULL;
+
+  bods = g_list_append (bods, "50");
+  bods = g_list_append (bods, "100");
+  bods = g_list_append (bods, "200");
+
+
+  comspeeds = g_list_append (comspeeds, "4800");
+  comspeeds = g_list_append (comspeeds, "9600");
+  comspeeds = g_list_append (comspeeds, "19200");
+  comspeeds = g_list_append (comspeeds, "38400");
+  comspeeds = g_list_append (comspeeds, "57600");
+  comspeeds = g_list_append (comspeeds, "115200");
 
     window = gtk_application_window_new (app);
     gtk_window_set_title (GTK_WINDOW (window), "Window");
@@ -47,8 +76,10 @@ static void activate (GtkApplication* app, gpointer user_data)
     gtk_grid_attach (GTK_GRID (grid), box, 0, 0, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), name1, TRUE, TRUE, 0);
 
-    speed1 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (speed1), "Скорость первого COM");
+    speed1 = gtk_combo_box_text_new ();
+    for (GList *l = comspeeds; l != NULL; l = l->next)
+      gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(speed1), (const gchar *)l->data);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(speed1), 1);
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 0, 1, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), speed1, TRUE, TRUE, 0);
@@ -59,8 +90,10 @@ static void activate (GtkApplication* app, gpointer user_data)
     gtk_grid_attach (GTK_GRID (grid), box, 6, 0, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), name2, TRUE, TRUE, 0);
 
-    speed2 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (speed2), "Скорость второго COM");
+    speed2 = gtk_combo_box_text_new ();
+    for (GList *l = comspeeds; l != NULL; l = l->next)
+      gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(speed2), (const gchar *)l->data);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(speed2), 1);
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 6, 1, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), speed2, TRUE, TRUE, 0);
@@ -71,14 +104,18 @@ static void activate (GtkApplication* app, gpointer user_data)
     gtk_grid_attach (GTK_GRID (grid), box, 12, 0, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), name3, TRUE, TRUE, 0);
 
-    speed3 = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (speed3), "Скорость третьего COM");
+    speed3 = gtk_combo_box_text_new ();
+    for (GList *l = comspeeds; l != NULL; l = l->next)
+      gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(speed3), (const gchar *)l->data);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(speed3), 1);
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 12, 1, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), speed3, TRUE, TRUE, 0);
 
-    zaderzka = gtk_entry_new ();
-    gtk_entry_set_placeholder_text (GTK_ENTRY (zaderzka), "Задержка");
+    zaderzka = gtk_combo_box_text_new ();
+    for (GList *l = bods; l != NULL; l = l->next)
+      gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(zaderzka), (const gchar *)l->data);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(zaderzka), 1);
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_grid_attach (GTK_GRID (grid), box, 12, 2, 5, 1);
     gtk_box_pack_start (GTK_BOX (box), zaderzka, TRUE, TRUE, 0);
@@ -97,7 +134,7 @@ static void activate (GtkApplication* app, gpointer user_data)
     gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 17, 1);
 
     button = gtk_button_new_with_label ("Завершить");
-    g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
+    g_signal_connect (button, "clicked", G_CALLBACK (quit_application), app);
     gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 17, 1);
 
     GtkWidget *text_view = gtk_text_view_new ();
@@ -128,7 +165,6 @@ int main (int argc, char **argv)
   status = g_application_run (G_APPLICATION (app), argc, argv);
   g_object_unref (app);
 
-  gtk_main ();
 
   return status;
 }

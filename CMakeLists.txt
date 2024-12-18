@@ -10,8 +10,8 @@ pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 include_directories(${GTK3_INCLUDE_DIR})
 link_directories(${GTK3_LIBRARY_DIR})
 
-add_executable(${PROJECT_NAME} WIN32 ../src/main.c ../res/res.rc)
-# add_executable(${PROJECT_NAME} ../src/main.c)
+# add_executable(${PROJECT_NAME} WIN32 ../src/main.c ../res/res.rc)
+add_executable(${PROJECT_NAME} ../src/main.c)
 target_link_libraries(${PROJECT_NAME} ${GTK3_LIBRARIES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${GTK3_CFLAGS})

@@ -15,6 +15,8 @@ uint32_t ***messagefiled;
 uint32_t *byteoffirst, *byteofsecond;
 GtkTextBuffer *global_buffer = NULL;
 
+pthread_t th1, th2, th3;
+
 typedef struct 
 {
   GtkWidget *name1;
@@ -176,8 +178,10 @@ Preamble PreambleSearch(uint64_t potok, uint8_t bit30, uint8_t bit29) {
 }
 
 void log_to_text_view(const char *message) {
+    GtkTextIter end_iter;
+    gtk_text_buffer_get_end_iter(global_buffer, &end_iter);
     if (global_buffer) {
-        gtk_text_buffer_set_text(global_buffer, message, -1);
+        gtk_text_buffer_insert(global_buffer, &end_iter, message, -1);
     }
 }
 
@@ -191,6 +195,28 @@ void *COMWriter(void *user_data) {
     uint32_t speed3 = (uint32_t)strtoul(com_speed, &endptr1, 10);
     char *endptr2;
     uint16_t zaderzka = (uint16_t)strtoul(zader, &endptr2, 10);
+
+    char output[256];
+    int num;
+    if (sscanf(COM3, "COM%d", &num) == 1) {
+        if (num > 10) {
+            snprintf(output, 256, "\\\\.\\%s", COM3);
+            strcpy(COM3, output);
+        }
+    }
+
+    if (zaderzka == 50)
+    {
+        zaderzka = 600;
+    } 
+    else if (zaderzka == 100)
+    {
+        zaderzka = 300;
+    }
+    else if (zaderzka == 200)
+    {
+        zaderzka = 150;
+    }
 
     uint16_t zaderzka_count = 0;
     bool zaderzka_priznak;
@@ -251,7 +277,7 @@ void *COMWriter(void *user_data) {
     }
 
     while (1) {
-//        Sleep(50);
+       Sleep(1);
         for(int l = 0; l < 64; l++) {
             for(int s = 0; s < 32; s++) {
                 pthread_mutex_lock(&lock);
@@ -353,6 +379,15 @@ void *firstCOM(void *user_data) {
     char *endptr;
     uint32_t speed1 = (uint32_t)strtoul(com_speed, &endptr, 10);
 
+    char output[256];
+    int num;
+    if (sscanf(COM1, "COM%d", &num) == 1) {
+        if (num > 10) {
+            snprintf(output, 256, "\\\\.\\%s", COM1);
+            strcpy(COM1, output);
+        }
+    } 
+
     printf("Start first thread\n");
     HANDLE hSerial1 = CreateFile(COM1, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if(hSerial1 == INVALID_HANDLE_VALUE) {
@@ -393,8 +428,14 @@ void *firstCOM(void *user_data) {
     startbit29 = bit29;
     startbit30 = bit30;
     uint8_t frame_id, sattNo;
+    COMSTAT comStat;
+    DWORD dwErrors;
 
     while(1) {
+        if (ClearCommError(hSerial1, &dwErrors, &comStat)) {
+            if (comStat.cbInQue <= 5)
+                Sleep(1);
+        }
         parity_result = false;
         // printf("Первая контрольная точка первого потока\n");
         ReadFile(hSerial1, &buffer, sizeof(buffer), &bytesRead, NULL); // Чтение начало
@@ -551,6 +592,15 @@ void *secondCOM(void *user_data) {
     char *endptr;
     uint32_t speed2 = (uint32_t)strtoul(com_speed, &endptr, 10);
 
+    char output[256];
+    int num;
+    if (sscanf(COM2, "COM%d", &num) == 1) {
+        if (num > 10) {
+            snprintf(output, 256, "\\\\.\\%s", COM2);
+            strcpy(COM2, output);
+        }
+    } 
+
     printf("Start second thread\n");
     HANDLE hSerial2 = CreateFile(COM2, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if(hSerial2 == INVALID_HANDLE_VALUE) {
@@ -591,11 +641,18 @@ void *secondCOM(void *user_data) {
     startbit29 = bit29;
     startbit30 = bit30;
     uint8_t frame_id, sattNo;
+    COMSTAT comStat;
+    DWORD dwErrors;
 
     while(1) {
+        if (ClearCommError(hSerial2, &dwErrors, &comStat)) {
+            if (comStat.cbInQue <= 5)
+                Sleep(1);
+        }
         parity_result = false;
         // printf("Первая контрольная точка первого потока\n");
-        ReadFile(hSerial2, &buffer, sizeof(buffer), &bytesRead, NULL); // Чтение начало
+        if (!ReadFile(hSerial2, &buffer, sizeof(buffer), &bytesRead, NULL)) // Чтение начало
+            Sleep(2);
         for(int i = 0; i < 8; i++) {
             uint8_t bit = (buffer >> i) & 0x01;
             if(bit == 1) {
@@ -744,7 +801,6 @@ void *secondCOM(void *user_data) {
 int prog_start (GtkButton *button, gpointer data) 
 {
     EntryData *datato = (EntryData *)data;
-    pthread_t th1, th2, th3;
     if (pthread_create(&th1, NULL, firstCOM, datato) != 0) {
         printf("Не удалось создать поток для первого порта\n");
         return 1;
